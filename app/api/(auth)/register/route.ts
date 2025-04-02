@@ -6,7 +6,7 @@ import { RegisterRequest } from "@/lib/types";
 export async function POST(req: Request) {
   try {
     const body: RegisterRequest = await req.json();
-    const { name, email, password } = body;
+    const { name, email, password, role } = body;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     // Create new user
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
+      data: { name, email, password: hashedPassword, role },
     });
 
     return NextResponse.json({ message: "User registered successfully", user });

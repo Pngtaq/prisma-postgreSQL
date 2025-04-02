@@ -18,8 +18,35 @@ model User {
   name      String
   email     String   @unique
   password  String
-  createdAt DateTime @default(now())
+  role      String   
   updatedAt DateTime @updatedAt
 }
 
 
+// scoresheet model
+model Forms {
+  formId     Int      @id @default(autoincrement())
+  userId     Int
+  areaId     Int
+  fields     Fields[] // One-to-Many relationship
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+
+  @@map("Forms")
+}
+
+model Fields {
+  fieldId  Int      @id @default(autoincrement())
+  form     Forms   @relation(fields: [formId], references: [formId], onDelete: Cascade)
+  formId   Int
+  indicatorNo Int
+  indicatorName String
+  method String[]
+  evidence String[]
+  movs     String[] // Array type in PostgreSQL
+  rating   Int
+  remarks  String?
+
+
+  @@map("Fields")
+}
