@@ -18,8 +18,29 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   
+  role      String   // SUPER_ADMIN, ADMIN, MODERATOR, EVALUATOR
   updatedAt DateTime @updatedAt
+
+  // NextAuth.js session fields
+  accounts  Account[]
+  sessions  Session[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String  @unique
+  user              User    @relation(fields: [userId], references: [id])
+  type              String
+  provider          String
+  providerAccountId String  @unique
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  expires      DateTime
 }
 
 

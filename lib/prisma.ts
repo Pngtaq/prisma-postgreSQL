@@ -1,6 +1,17 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient().$extends(withAccelerate());
+// For PrismaClient instantiation
+const globalForPrisma = global as { prisma?: PrismaClient };
+
+let prisma: PrismaClient;
+
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = new PrismaClient();
+  }
+  prisma = globalForPrisma.prisma;
+}
 
 export default prisma;
